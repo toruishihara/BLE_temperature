@@ -4,13 +4,13 @@ Bluetooth Low Energy temperature sensor Firmware and mobile app
 
 # Room temperature GATT Server Example
 
-## PIN connection ESP32-WROOM-32D and DHT22
+### PIN connection ESP32-WROOM-32D and DHT22
 
 ESP32 GROUND -- DHT22 GROUND
 ESP32 VCC    -- DHT22 VCC
 ESP32 P17    -- DHT22 S
 
-## Import component
+### Import component
 Clone https://github.com/UncleRus/esp-idf-lib.git
 make symbolik link
 ```
@@ -20,19 +20,19 @@ ln -s ~/esp/esp-idf-lib/components/dht dht
 ln -s ~/esp/esp-idf-lib/components/esp_idf_lib_helpers esp_idf_lib_helpers
 ```
 
-## For build
+### For build
 ```
 cd esp32_fw
 idf.py set-target esp32
 idf.py build
 ```
 
-## For flash on macOS terminal
+### For flash on macOS terminal
 ```
 idf.py -p /dev/cu.SLAB_USBtoUART flash
 ```
 
-## For running on macOS terminal
+### For running on macOS terminal
 ```
 idf.py -p /dev/cu.SLAB_USBtoUART monitor
 ```
@@ -40,5 +40,5 @@ idf.py -p /dev/cu.SLAB_USBtoUART monitor
 End monitor by Ctrl + ]
 
 
-![Measuring temp 0](images/temp0.png)
-![Measuring temp 1](images/temp1.png)
+![Measuring temp 0](images/temp0.jpg)
+![Measuring temp 1](images/temp1.jpg)
