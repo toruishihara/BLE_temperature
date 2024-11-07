@@ -9,14 +9,16 @@ import SwiftUI
 import CoreBluetooth
 
 class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+    @Published var temperature: Float = -100.0
+
     @Published var isScanning = false
     @Published var discoveredPeripherals: [CBPeripheral] = []
     @Published var connectedPeripheral: CBPeripheral?
-    @Published var temperatureValue: Float = 0.0  // To store the temperature value
 
     private var centralManager: CBCentralManager!
     private var temperatureCharacteristic: CBCharacteristic?
-
+    private var temperatureTimer: Timer?
+    
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
@@ -96,6 +98,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     // Called when the peripheral disconnects
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("Disconnected from \(peripheral.name ?? "Unknown")")
+        stopTemperatureUpdates()
         connectedPeripheral = nil
     }
     
@@ -131,12 +134,34 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                 if characteristic.uuid == CBUUID(string: "2A1C") {
                     temperatureCharacteristic = characteristic
                     // Read the characteristic value
-                    peripheral.readValue(for: characteristic)
+                    startTemperatureUpdates()
+                    //peripheral.readValue(for: characteristic)
                 }
             }
         }
     }
     
+    // Start periodic temperature updates every 5 seconds
+    func startTemperatureUpdates() {
+        temperatureTimer?.invalidate()  // Invalidate any existing timer
+        temperatureTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+            self.readTemperature()
+        }
+    }
+    
+    // Stop timer when needed (e.g., when disconnected)
+    func stopTemperatureUpdates() {
+        temperatureTimer?.invalidate()
+        temperatureTimer = nil
+    }
+
+    // Read the temperature value from the characteristic
+    func readTemperature() {
+        if let characteristic = temperatureCharacteristic, let peripheral = connectedPeripheral {
+            peripheral.readValue(for: characteristic)
+        }
+    }
+
     // Called when a characteristic's value is updated
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
@@ -146,8 +171,8 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         
         if characteristic.uuid == CBUUID(string: "2A1C"), let data = characteristic.value {
             // Decode the temperature data from the characteristic's value
-            temperatureValue = decodeTemperatureData(data)
-            print("Temperature: \(temperatureValue) °C")
+            temperature = decodeTemperatureData(data)
+            print("Temperature: \(temperature) °C")
         }
     }
     

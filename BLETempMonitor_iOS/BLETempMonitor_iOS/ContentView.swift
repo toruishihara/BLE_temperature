@@ -10,7 +10,7 @@ import CoreBluetooth
 
 struct ContentView: View {
     @ObservedObject var bleManager = BLEManager()
-
+    
     var body: some View {
         VStack {
             Text("Bluetooth Scanner")
@@ -31,6 +31,11 @@ struct ContentView: View {
                     .cornerRadius(8)
             }
             .padding()
+            
+            Text("Temperature:")
+            Text("\(bleManager.temperature, specifier: "%.2f") °C")
+                .font(.largeTitle)
+                .padding()
         }
     }
 }

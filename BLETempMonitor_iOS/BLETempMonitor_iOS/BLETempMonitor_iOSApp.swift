@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Combine
 
 @main
 struct BLETempMonitor_iOSApp: App {
+
     var body: some Scene {
         WindowGroup {
             ContentView()
