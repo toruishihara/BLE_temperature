@@ -1,5 +1,7 @@
 # Ignore build output directory
 /build/
+components/
+managed_components/
 
 # Ignore CMake generated files
 CMakeFiles/

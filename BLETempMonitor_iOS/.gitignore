@@ -1,0 +1,71 @@
+# Swift and Xcode
+*.xcuserstate
+*.xcworkspace
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/xcshareddata/xcschemes/ (optional)
+*.xcodeproj/*.pbxuser
+*.xcodeproj/*.mode1v3
+*.xcodeproj/*.mode2v3
+*.xcodeproj/*.perspectivev3
+*.swiftpm
+*.swiftpm/xcode/package.xcworkspace/
+*.package.resolved
+**/Package.resolved
+
+# Derived data, build products, and indexes
+DerivedData/
+build/
+.xcresult/
+index/
+*.llbuild
+.xcconfig
+*.hmap
+*.ipa
+*.app
+*.dSYM
+*.xcscheme
+*.xcsettings
+
+# Swift Package Manager
+/.build/
+# Individual swift package builds
+.build/
+# SwiftPM Binary artefacts
+.swiftpm/
+# Xcode package dependency artifacts and generated files
+/.sourcecontrol/
+# Xcode will automatically regenerate this based on the Package.resolved
+# Manifests, not tracked by default because they’re user-unique
+# Exclude xcuserdata by default, usually contains user-specific information
+*.swiftpm/xcode/
+.xcresult
+
+# Cocoapods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# Other Files
+*.moved-aside
+*.xcuserstate
+*.xcuserdata
+*.xcscmblueprint
+*.yaml
+**/.DS_Store
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/metadata
+fastlane/logs
+
+# Code Signing
+*.certSigningRequest
+*.mobileprovision
+*.xcarchive
