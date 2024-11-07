@@ -1,0 +1,36 @@
+# Ignore build output directory
+/build/
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+*.o
+*.elf
+*.bin
+*.map
+
+# Ignore ESP-IDF logs and temporary files
+*.log
+*.tmp
+
+# Ignore VS Code configuration files
+.vscode/
+
+# Ignore PlatformIO files (if using PlatformIO with ESP-IDF)
+.pio/
+.clangd
+
+# Ignore ESP-IDF specific directories
+/esp-idf/components/esp-idf-lib/**/build/
+esp-idf/.espressif/
+.espressif/
+*.pyc
+__pycache__/
+
+# Ignore environment files created by ESP-IDF
+*.env
+
+# Ignore other common files and
+
