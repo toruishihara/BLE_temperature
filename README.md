@@ -5,16 +5,18 @@ Bluetooth Low Energy temperature sensor Firmware and mobile app
 # Room temperature GATT Server Example
 
 ### PIN connection ESP32-WROOM-32D and DHT22
-
-ESP32 GROUND -- DHT22 GROUND<br>
-ESP32 VCC    -- DHT22 VCC<br>
-ESP32 P17    -- DHT22 S<br>
+```
+ESP32 GROUND -- DHT22 GROUND
+ESP32 VCC    -- DHT22 VCC
+ESP32 P17    -- DHT22 S
+```
 
 ### Import component
 Clone https://github.com/UncleRus/esp-idf-lib.git
-make symbolik link
+make subdir of components and make symbolik link
 ```
 cd esp32_fw
+mkdir components
 cd components
 ln -s ~/esp/esp-idf-lib/components/dht dht
 ln -s ~/esp/esp-idf-lib/components/esp_idf_lib_helpers esp_idf_lib_helpers
