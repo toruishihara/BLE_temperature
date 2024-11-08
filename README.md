@@ -6,9 +6,9 @@ Bluetooth Low Energy temperature sensor Firmware and mobile app
 
 ### PIN connection ESP32-WROOM-32D and DHT22
 
-ESP32 GROUND -- DHT22 GROUND
-ESP32 VCC    -- DHT22 VCC
-ESP32 P17    -- DHT22 S
+ESP32 GROUND -- DHT22 GROUND<br>
+ESP32 VCC    -- DHT22 VCC<br>
+ESP32 P17    -- DHT22 S<br>
 
 ### Import component
 Clone https://github.com/UncleRus/esp-idf-lib.git
