@@ -40,5 +40,8 @@ idf.py -p /dev/cu.SLAB_USBtoUART monitor
 End monitor by Ctrl + ]
 
 
-![Measuring temp 0](images/temp0.jpg)
-![Measuring temp 1](images/temp1.jpg)
+### Measuring with Chart
+![Measuring temp 0](images/temp2.jpg)
+![Measuring temp 1](images/temp3.jpg)
+
+Sensor is on the ice back. Temperature is down slowly. 

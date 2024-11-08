@@ -144,7 +144,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     // Start periodic temperature updates every 5 seconds
     func startTemperatureUpdates() {
         temperatureTimer?.invalidate()  // Invalidate any existing timer
-        temperatureTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+        temperatureTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             self.readTemperature()
         }
     }

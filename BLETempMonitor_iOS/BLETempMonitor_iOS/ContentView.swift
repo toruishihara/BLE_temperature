@@ -7,19 +7,30 @@
 
 import SwiftUI
 import CoreBluetooth
+import Charts
 
 struct ContentView: View {
-    @ObservedObject var bleManager = BLEManager()
+    @StateObject private var bleManager = BLEManager()
+    
+    // Lazy initialization for TemperatureViewModel using the same BLEManager instance
+    private var viewModel: TemperatureViewModel {
+        TemperatureViewModel(bleManager: bleManager)
+    }
     
     var body: some View {
         VStack {
-            Text("Bluetooth Scanner")
-                .font(.largeTitle)
+            //Text("Bluetooth Scanner")
+            //    .font(.largeTitle)
+            //    .padding()
+
+            //List(bleManager.discoveredPeripherals, id: \.identifier) { peripheral in
+            //    Text(peripheral.name ?? "Unknown Peripheral")
+            //}
+            Text("Time-Temperature Graph")
+                .font(.title)
                 .padding()
 
-            List(bleManager.discoveredPeripherals, id: \.identifier) { peripheral in
-                Text(peripheral.name ?? "Unknown Peripheral")
-            }
+            TemperatureGraphView(bleManager: bleManager)
 
             Button(action: {
                 bleManager.isScanning ? bleManager.stopScanning() : bleManager.startScanning()
