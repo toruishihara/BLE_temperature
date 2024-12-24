@@ -14,6 +14,8 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
   int _startUnixTime = 0;
   int _year = 0;
   int _month = 0;
+  int _day = 0;
+  int _maxDay = 0;
   List<String> monthAbbreviations = [
     '',      // Placeholder for 0-index
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -27,8 +29,8 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
     // Initial data fetch
     _fetchTemperatureData();
 
-    // Schedule periodic updates every 1 minute
-    _updateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+    // Schedule periodic updates every 20 minute
+    _updateTimer = Timer.periodic(Duration(minutes: 20), (timer) {
       _fetchTemperatureData();
     });
   }
@@ -42,6 +44,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
 
   Future _fetchTemperatureData() async {
     try {
+      _dataSpots = [];
       // Access the database
       final db = await DatabaseHelper.instance.database;
 
@@ -51,26 +54,33 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
 
       for (var row in results) {
         String dateStr = row['timestamp'] as String;
-
-        // Parse the ISO string to a DateTime object
-        DateTime dateTime = DateTime.parse(dateStr);
+        DateTime timeStamp = DateTime.parse(dateStr);
 
         // Extract Year, Month, Day, and Hour
         if (_year == 0 && _month == 0) {
-          _year = dateTime.year;
-          _month = dateTime.month;
+          _year = timeStamp.year;
+          _month = timeStamp.month;
+          _day = timeStamp.day;
+        }
+        if (_maxDay < timeStamp.day) {
+          _maxDay = timeStamp.day;
         }
 
         // Convert to Unix timestamp (seconds since epoch)
-        int unixSeconds = dateTime.millisecondsSinceEpoch ~/ 1000;
+        int unixSeconds = timeStamp.millisecondsSinceEpoch ~/ 1000;
         if (_startUnixTime == 0) {
-          _startUnixTime = unixSeconds;
+          DateTime dateOnly = DateTime(timeStamp.year, timeStamp.month, timeStamp.day);
+          _startUnixTime = dateOnly.millisecondsSinceEpoch ~/ 1000;
         }
         int deltaSec =  unixSeconds - _startUnixTime;
 
         double tempValue = row['temp_value'] as double;
-        print('deltaSec:${deltaSec} temp: ${tempValue}');
-        _dataSpots.add(FlSpot(deltaSec.toDouble(), tempValue));
+        //_dataSpots.add(FlSpot(deltaSec.toDouble(), tempValue));
+        //print('deltaSec:${deltaSec} temp: ${tempValue}');
+        // Update the data
+        setState(() {
+          _dataSpots.add(FlSpot(deltaSec.toDouble(), tempValue));
+        });
       }
     } catch (e) {
       debugPrint('TNI Error: $e');
@@ -79,7 +89,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
     }
   }
 
-  final Color mainLineColor = Color.fromARGB(255, 255, 0, 0);
+  final Color mainLineColor = Color.fromARGB(255, 0, 0, 0);
   final Color belowLineColor = Color.fromARGB(255, 0, 0, 255);
   final Color aboveLineColor = Color.fromARGB(255, 0, 255, 0);
 
@@ -88,21 +98,19 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
     int unixTime = value.toInt() + _startUnixTime;
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(unixTime * 1000);
 
-    // Extract Year, Month, Day, and Hour
-    int day = dateTime.day;
     int hour = dateTime.hour;
     int min = dateTime.minute;
 
-    text = "$day $hour:$min";
+    text = "$hour:00";
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 4,
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 10,
+          fontSize: 8,
           color: mainLineColor,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.normal,
         ),
       ),
     );
@@ -128,8 +136,8 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
         padding: const EdgeInsets.all(16.0),
         child: LineChart(
           LineChartData(
-            minY: -10.0, // Set minimum Y value
-            maxY: 50.0,  // Set maximum Y value
+            minY: 0.0, // Set minimum Y value
+            maxY: 20.0,  // Set maximum Y value
             titlesData: FlTitlesData(
               show: true,
               topTitles: const AxisTitles(
@@ -140,7 +148,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
               ),
               bottomTitles: AxisTitles(
                 axisNameWidget: Text(
-                  '$_year ${monthAbbreviations[_month]}',
+                  '$_year ${monthAbbreviations[_month]} $_day - $_maxDay',
                   style: TextStyle(
                     fontSize: 10,
                     color: mainLineColor,
@@ -150,7 +158,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
                 sideTitles: SideTitles(
                   showTitles: true,
                   reservedSize: 18,
-                  interval: 60*60,
+                  interval: 6*60*60,
                   getTitlesWidget: bottomTitleWidgets,
                 ),
               ),
@@ -159,7 +167,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
                 axisNameWidget: const Text(
                   'Temperature °C',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 255),
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
                 sideTitles: SideTitles(
@@ -178,12 +186,29 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
             lineBarsData: [
               LineChartBarData(
                 spots: _dataSpots,
-                isCurved: true,
-                barWidth: 3,
-                //colors: [Colors.blue],
-                dotData: FlDotData(show: true),
+                isCurved: false,
+                barWidth: 0.5, // Thin line
+                color: Color.fromARGB(255, 0, 0, 255),
+                dotData: FlDotData(
+                  show: true,
+                  getDotPainter: (FlSpot spot, double xPercentage, LineChartBarData bar, int index) {
+                    return FlDotCirclePainter(
+                      radius: 2.0, // Small dot size
+                      color: Color.fromARGB(255, 0, 0, 255), // Dot color matches the line
+                    );
+                  },
+                ),
               ),
             ],
+            //lineBarsData: [
+            //  LineChartBarData(
+            //    spots: _dataSpots,
+            //    isCurved: false,
+            //    barWidth: 1,
+            //    color: Color.fromARGB(255, 0, 0, 255),
+            //    dotData: FlDotData(show: true),
+            //  ),
+            //],
           ),
         ),
       ),

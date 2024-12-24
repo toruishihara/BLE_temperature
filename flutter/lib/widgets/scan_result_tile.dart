@@ -65,21 +65,25 @@ class _ScanResultTileState extends State<ScanResultTile> {
           Text(
             widget.result.device.platformName,
             overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 8.0),
           ),
           Text(
             widget.result.device.remoteId.str,
-            style: TextStyle(fontSize: 10.0),
+            style: TextStyle(fontSize: 8.0),
           )
         ],
       );
     } else {
-      return Text(widget.result.device.remoteId.str);
+      return Text(widget.result.device.remoteId.str, style: TextStyle(fontSize: 8.0),
+      );
     }
   }
 
   Widget _buildConnectButton(BuildContext context) {
     return ElevatedButton(
-      child: isConnected ? const Text('OPEN') : const Text('CONNECT'),
+      child: isConnected ? 
+          const Text('OPEN', style: TextStyle(fontSize: 8)) :
+          const Text('CONNECT', style: TextStyle(fontSize: 8)),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
@@ -90,19 +94,19 @@ class _ScanResultTileState extends State<ScanResultTile> {
 
   Widget _buildAdvRow(BuildContext context, String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
       
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(title, style: TextStyle(fontSize: 10.0)),
+          Text(title, style: TextStyle(fontSize: 8.0).apply(color: Colors.blue)),
           const SizedBox(
-            width: 12.0,
+            width: 6.0,
           ),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(fontSize: 10.0).apply(color: Colors.black),
+              style: TextStyle(fontSize: 8.0).apply(color: Colors.black),
               softWrap: true,
             ),
           ),
@@ -116,7 +120,7 @@ class _ScanResultTileState extends State<ScanResultTile> {
     var adv = widget.result.advertisementData;
     return ExpansionTile(
       title: _buildTitle(context),
-      leading: Text(widget.result.rssi.toString()),
+      leading: Text(widget.result.rssi.toString(), style: TextStyle(fontSize: 8.0)),
       trailing: _buildConnectButton(context),
       children: <Widget>[
         if (adv.advName.isNotEmpty) _buildAdvRow(context, 'Name', adv.advName),

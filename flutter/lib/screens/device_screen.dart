@@ -85,7 +85,6 @@ class _DeviceScreenState extends State<DeviceScreen> {
   }
 
   Future onConnectPressed() async {
-    debugPrint("TNI device_screen onConnectPressed ${widget.device.advName}");
     try {
       await widget.device.connectAndUpdateStream();
       Snackbar.show(ABC.c, "Connect: Success", success: true);
@@ -183,7 +182,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
   Widget buildRemoteId(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text('${widget.device.remoteId}', style: TextStyle(fontSize: 10.0), ),
+      child: Text('${widget.device.remoteId}', style: TextStyle(fontSize: 8.0), ),
     );
   }
 
@@ -192,7 +191,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         isConnected ? const Icon(Icons.bluetooth_connected) : const Icon(Icons.bluetooth_disabled),
-        Text(((isConnected && _rssi != null) ? '${_rssi!} dBm' : ''), style: TextStyle(fontSize: 10.0),)
+        Text(((isConnected && _rssi != null) ? '${_rssi!} dBm' : ''), style: TextStyle(fontSize: 8.0),)
       ],
     );
   }

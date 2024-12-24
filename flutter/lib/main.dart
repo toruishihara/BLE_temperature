@@ -6,9 +6,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
 import 'screens/bluetooth_off_screen.dart';
 import 'screens/scan_screen.dart';
@@ -65,7 +62,7 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
       color: Colors.lightBlue,
       //home: screen,
       home: Scaffold(
-        body: Column(
+        body: Row(
           children: [
                         // Top Widget
             Expanded(

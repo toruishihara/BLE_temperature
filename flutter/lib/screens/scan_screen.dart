@@ -24,8 +24,11 @@ class _ScanScreenState extends State<ScanScreen> {
   bool _isScanning = false;
   late StreamSubscription<List<ScanResult>> _scanResultsSubscription;
   late StreamSubscription<bool> _isScanningSubscription;
+  static int _periodSecond = 5*60;
+  bool _timerActive = false;
   late Timer _timer;
   bool _connecting = false;
+  DateTime _connectingDate = DateTime.now().subtract(Duration(seconds: _periodSecond));
 
   @override
   void initState() {
@@ -36,12 +39,13 @@ class _ScanScreenState extends State<ScanScreen> {
       try {
         for (int i = 0; i < results.length; i++) {
           ScanResult item = results[i];
-          debugPrint("Raw ScanResult $i: ${item.device.advName}");
-          if (item.device.advName.startsWith("ESP32_") && _connecting == false) {
+          Duration diff = DateTime.now().difference(_connectingDate);
+          if (item.device.advName.startsWith("ESP32_") && _connecting == false && diff.inSeconds > _periodSecond) {
             _connecting = true;
-            Future.delayed(Duration(seconds: 1), () {
+            _connectingDate = DateTime.now();
+            //Future.delayed(Duration(seconds: 1), () {
               connectAndReadTemperature(item.device);
-            });
+            //});
             break;
           }
         }
@@ -67,12 +71,15 @@ class _ScanScreenState extends State<ScanScreen> {
     });
 
     // Start the periodic timer
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
-      if (!_isScanning) {
-        debugPrint("TNI ${DateTime.now()}: Scanning is inactive. Restarting scan...");
-        onScanPressed();
-      }
-    });
+    if (_timerActive == false) {
+      _timerActive = true;
+      _timer = Timer.periodic(Duration(seconds: _periodSecond), (timer) {
+        if (!_isScanning) {
+          debugPrint("TNI ${DateTime.now()}: Scanning is inactive. Restarting scan...");
+          onScanPressed();
+        }
+      });
+    }
   }
 
   @override
@@ -119,7 +126,6 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   void onConnectPressed(BluetoothDevice device) {
-    debugPrint("TNI scan_screen onConnectPressed ${device.advName}");
     device.connectAndUpdateStream().catchError((e) {
       Snackbar.show(ABC.c, prettyException("Connect Error:", e), success: false);
     });
