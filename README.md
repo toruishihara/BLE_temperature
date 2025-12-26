@@ -41,6 +41,8 @@ idf.py -p /dev/cu.SLAB_USBtoUART monitor
 
 End monitor by Ctrl + ]
 
+### Screenshots
+![Measuring temp ](images/temp_day.jpg)
 
 ### Measuring with Chart
 ![Measuring temp 0](images/temp2.jpg)
